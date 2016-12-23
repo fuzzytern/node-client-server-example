@@ -1,14 +1,24 @@
 const net = require('net');
-const client = new net.Socket;
+const sock = new net.Socket;
 
-client.setEncoding('utf-8');
+sock.setEncoding('utf-8');
 
-client.connect('9000', () => {
-  console.log('connected to %j', client.address());
-  client.write('Hello from the client');
+sock.on('connect', () => {
+  console.log('connected to %j', sock.address());
+  sock.write('GET /en/ HTTP/1.1 \r\n');
+  sock.write('Host: 127.0.0.1');
+  sock.write('\r\n\r\n');
 });
 
-client.on('data', (data) => {
+sock.on('data', (data) => {
   console.log('Server says:', data);
 });
 
+sock.on('end', (data) => {
+});
+
+sock.on('error', (err) => {
+  console.log('An error occured:', err);
+});
+
+sock.connect('9000');
